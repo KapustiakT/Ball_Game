@@ -8,12 +8,15 @@
 
 [node name="ball" type="Node3D"]
 
-[node name="RigidBody3D" type="RigidBody3D" parent="." groups=["pickupable"]]
+[node name="ball" type="RigidBody3D" parent="." groups=["pickupable"]]
+unique_name_in_owner = true
 script = ExtResource("1_0k00o")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ball"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("SphereShape3D_bbs8l")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ball/CollisionShape3D"]
 mesh = SubResource("SphereMesh_7qgtx")
+
+[connection signal="body_entered" from="ball" to="ball" method="_on_body_entered"]

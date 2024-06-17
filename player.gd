@@ -89,6 +89,13 @@ func try_pick_up_ball():
 	var space_state = get_world_3d().direct_space_state
 	var result = space_state.intersect_ray(params)
 
+
+	if result.collider.is_in_group("pickupable"):
+		ball = result.collider
+		holding_ball = true
+		ball.set_player(self)
+
+
 func drop_ball():
 	if ball:
 		holding_ball = false

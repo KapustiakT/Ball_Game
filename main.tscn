@@ -25,11 +25,11 @@ environment = SubResource("Environment_7q0yo")
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Node3D" parent="." instance=ExtResource("1_q05l2")]
+[node name="arena" parent="." instance=ExtResource("1_q05l2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.052281, 0, 0)
-
-[node name="Player" parent="Node3D" instance=ExtResource("2_aiv10")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.577731, 0)
 
 [node name="ball" parent="." instance=ExtResource("3_xgsul")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.511479, -1.29259)
+
+[node name="Player" parent="." instance=ExtResource("2_aiv10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.052281, 0.577731, 0)

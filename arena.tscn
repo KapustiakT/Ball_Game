@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ccv8sktuspumv"]
+[gd_scene load_steps=7 format=3 uid="uid://ccv8sktuspumv"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_c723k"]
 
@@ -8,10 +8,11 @@
 
 [sub_resource type="BoxMesh" id="BoxMesh_ihjlm"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_grdrl"]
-size = Vector3(1, 1, 20.6456)
+[sub_resource type="PlaneMesh" id="PlaneMesh_rnvll"]
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_ibckv"]
+
+[node name="arena" type="Node3D"]
 
 [node name="floor" type="StaticBody3D" parent="."]
 
@@ -30,10 +31,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.494394, 0.711732, 0)
 shape = SubResource("BoxShape3D_4nx1g")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="box/CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.65083, 0, 0)
 mesh = SubResource("BoxMesh_ihjlm")
 
-[node name="goal" type="StaticBody3D" parent="."]
+[node name="goal" type="Area3D" parent="."]
+transform = Transform3D(-8.74228e-08, 2, -8.74228e-08, 0, -8.74228e-08, -2, -2, -8.74228e-08, 3.82137e-15, -10.1572, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="goal"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.35187e-23, 0, -8.35187e-23, 1, 0, 0, 0)
+mesh = SubResource("PlaneMesh_rnvll")
+skeleton = NodePath("../CollisionShape3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="goal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.42328, 0, 0.280586)
-shape = SubResource("BoxShape3D_grdrl")
+transform = Transform3D(1, 0, 0, 0, 1, -8.35187e-23, 0, -8.35187e-23, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_ibckv")
