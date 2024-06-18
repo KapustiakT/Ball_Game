@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cboo4h64c6nc4"]
+[gd_scene load_steps=5 format=3 uid="uid://cboo4h64c6nc4"]
 
 [ext_resource type="Script" path="res://ball.gd" id="1_0k00o"]
 
@@ -6,17 +6,23 @@
 
 [sub_resource type="SphereMesh" id="SphereMesh_7qgtx"]
 
-[node name="ball" type="Node3D"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kfxto"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
-[node name="ball" type="RigidBody3D" parent="." groups=["pickupable"]]
+[node name="ball" type="RigidBody3D" groups=["pickupable"]]
 unique_name_in_owner = true
 script = ExtResource("1_0k00o")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ball"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("SphereShape3D_bbs8l")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="ball/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
 mesh = SubResource("SphereMesh_7qgtx")
 
-[connection signal="body_entered" from="ball" to="ball" method="_on_body_entered"]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_kfxto")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

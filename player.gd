@@ -29,15 +29,17 @@ const INTERACT_DISTANCE = 2.0
 var rotation_x = 0.0
 var rotation_y = 0.0
 
-#func _enter_tree():
-#	set_multiplayer_authority(str(name).to_int())
+func _enter_tree():
+	set_multiplayer_authority(str(name).to_int())
 
 func _ready():
+	if not is_multiplayer_authority(): return
 	# Capture the mouse
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	camera.current = true
 
 func _input(event):
-#	if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority(): return
 	if event is InputEventMouseMotion:
 		# Update rotation based on mouse motion
 		rotation_y -= event.relative.x * mouse_sensitivity
@@ -53,16 +55,16 @@ func _input(event):
 	if event.is_action_pressed("interact"):
 		print('e')
 		if holding_ball:
-			drop_ball()
+			drop_ball.rpc()
 		else:
-			try_pick_up_ball()
+			try_pick_up_ball.rpc()
 
 	if event.is_action_pressed("throw"):
 		if holding_ball:
-			throw_ball()
+			throw_ball.rpc()
 
 func _physics_process(delta):
-#	if not is_multiplayer_authority():return
+	if not is_multiplayer_authority():return
 	# Add the gravity
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -94,6 +96,7 @@ func _physics_process(delta):
 
 	move_and_slide()
 
+@rpc("call_local")
 func try_pick_up_ball():
 	# Cast a ray from the camera to detect the ball
 	var params = PhysicsRayQueryParameters3D.new()
@@ -108,7 +111,7 @@ func try_pick_up_ball():
 		holding_ball = true
 		ball.set_player(self)
 
-
+@rpc("call_local")
 func drop_ball():
 	if ball:
 		holding_ball = false
@@ -117,6 +120,7 @@ func drop_ball():
 func is_holding_ball():
 	return holding_ball
 
+@rpc("call_local")
 func throw_ball():
 	if ball:
 		var throw_direction = camera.global_transform.basis.z.normalized() * -THROW_FORCE

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dyu5eu56me6nj"]
+[gd_scene load_steps=5 format=3 uid="uid://dyu5eu56me6nj"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_cgarb"]
 
@@ -6,23 +6,36 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_lx5xd"]
 
-[node name="Player" type="Node3D"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ri08o"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("Camera:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.816617, 0)
 collision_layer = 2
 script = ExtResource("1_cgarb")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_3660h")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
 mesh = SubResource("CapsuleMesh_lx5xd")
 
-[node name="HandPosition" type="Marker3D" parent="CharacterBody3D"]
+[node name="HandPosition" type="Marker3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0040046, -0.0207429, -0.646063)
 
-[node name="Camera" type="Camera3D" parent="CharacterBody3D"]
+[node name="Camera" type="Camera3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0164772, 0.38446, 0.152996)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_ri08o")
