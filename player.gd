@@ -14,6 +14,11 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var ball = null
 var holding_ball = false
 
+# Dash vars
+const DASH_SPEED = 20.0
+const DASH_TIME = 0.2
+var is_dashing = false
+var dash_timer = 0
 
 #throwing force
 const THROW_FORCE = 10
@@ -62,6 +67,9 @@ func _input(event):
 	if event.is_action_pressed("throw"):
 		if holding_ball:
 			throw_ball.rpc()
+	
+	if event.is_action_pressed("dash") and not is_dashing:
+		start_dash()
 
 func _physics_process(delta):
 	if not is_multiplayer_authority():return
@@ -91,8 +99,20 @@ func _physics_process(delta):
 	else:
 		velocity.x = 0
 		velocity.z = 0
-#		velocity.x = move_toward(velocity.x, 0, SPEED * delta)
-#		velocity.z = move_toward(velocity.z, 0, SPEED * delta)
+	
+	if is_dashing:
+		velocity = direction * DASH_SPEED
+		dash_timer -= delta
+		if dash_timer <= 0:
+			stop_dash()
+	else:
+		if direction != Vector3.ZERO:
+			var velocity_vector = direction * SPEED
+			velocity.x = velocity_vector.x
+			velocity.z = velocity_vector.z
+		else:
+			velocity.x = 0
+			velocity.z = 0
 
 	move_and_slide()
 
@@ -110,6 +130,7 @@ func try_pick_up_ball():
 		ball = result.collider
 		holding_ball = true
 		ball.set_player(self)
+	else: return
 
 @rpc("call_local")
 func drop_ball():
@@ -117,6 +138,7 @@ func drop_ball():
 		holding_ball = false
 		ball = null
 
+@rpc("call_local")
 func is_holding_ball():
 	return holding_ball
 
@@ -127,7 +149,17 @@ func throw_ball():
 		ball.apply_central_impulse(throw_direction)
 		drop_ball()
 
+@rpc("call_local")
 func get_hand_position():
 	# Return the position where the ball should be when held
 	return hand_position.global_transform.origin
 	#camera.global_transform.origin + camera.global_transform.basis.z.normalized() * 1.5
+
+func start_dash():
+	is_dashing = true
+	dash_timer = DASH_TIME
+
+func stop_dash():
+	is_dashing = false
+	velocity = Vector3.ZERO
+	

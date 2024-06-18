@@ -1,22 +1,30 @@
 extends Area3D
 
+var ball = null
+var ball_spawn_point = Vector3.ZERO
+
+# Timer node reference
+@onready var timer = $Timer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
 	pass
 
 
 func _on_body_entered(body):
 	# Check if the body is the ball
 	if body.name == "ball":
-		print("The ball has entered the area!")
+		
+		ball = body
+		ball_spawn_point = ball.global_transform.origin
+		# Start the timer
+		timer.start()
+		print("goal!")
 
-
-func _on_body_exited(body):
-	if body.name == "ball":
-		print("The ball has left the area!")
+func _on_timer_timeout():
+	if ball:
+		ball.global_transform.origin = ball_spawn_point
+		# Optionally reset velocity if it's a RigidBody3D
+	if ball is RigidBody3D:
+		ball.linear_velocity = Vector3.ZERO
+		ball.angular_velocity = Vector3.ZERO 

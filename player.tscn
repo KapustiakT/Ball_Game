@@ -19,7 +19,6 @@ properties/2/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.816617, 0)
-collision_layer = 2
 script = ExtResource("1_cgarb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

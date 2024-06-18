@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ccv8sktuspumv"]
+[gd_scene load_steps=6 format=3 uid="uid://ccv8sktuspumv"]
 
 [ext_resource type="Script" path="res://goal.gd" id="1_m561i"]
 
@@ -6,12 +6,10 @@
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_obhro"]
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_rnvll"]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_ibckv"]
 size = Vector3(11.4872, 1.55969, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_563yx"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_p1bwt"]
 
 [node name="arena" type="Node3D"]
 
@@ -28,6 +26,11 @@ shape = SubResource("WorldBoundaryShape3D_obhro")
 transform = Transform3D(-8.74228e-08, 2, -8.74228e-08, 0, -8.74228e-08, -2, -2, -8.74228e-08, 3.82137e-15, -10.1572, 0, 0)
 script = ExtResource("1_m561i")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="goal"]
+transform = Transform3D(1, 0, 0, 0, 1, -8.35187e-23, 0, -8.35188e-23, 1, -4.76312e-08, 1.08967, -4.76312e-08)
+mesh = SubResource("PlaneMesh_rnvll")
+skeleton = NodePath("../CollisionShape3D")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="goal"]
 transform = Transform3D(1, 0, 0, 0, 1, -8.35187e-23, 0, -8.35188e-23, 1, 0.0430832, 0.279846, 0)
 shape = SubResource("BoxShape3D_ibckv")
@@ -35,15 +38,6 @@ shape = SubResource("BoxShape3D_ibckv")
 [node name="Timer" type="Timer" parent="goal"]
 wait_time = 3.0
 one_shot = true
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1885, 0.836624, 0.105512)
-shape = SubResource("BoxShape3D_563yx")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/CollisionShape3D"]
-mesh = SubResource("BoxMesh_p1bwt")
 
 [connection signal="body_entered" from="goal" to="goal" method="_on_body_entered"]
 [connection signal="body_exited" from="goal" to="goal" method="_on_body_exited"]
