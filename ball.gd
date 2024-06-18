@@ -1,6 +1,4 @@
 extends RigidBody3D
-#signals
-
 
 # Reference to the player
 var player = null
@@ -13,5 +11,3 @@ func _process(_delta):
 	if player and player.is_holding_ball():
 		global_transform.origin = player.get_hand_position()
 
-func _on_body_entered(_body):
-	print("goal")

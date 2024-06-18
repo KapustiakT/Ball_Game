@@ -14,21 +14,30 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var ball = null
 var holding_ball = false
 
+
+#throwing force
+const THROW_FORCE = 10
+
 # Distance to interact with the ball
 const INTERACT_DISTANCE = 2.0
 
 # Camera reference
 @onready var camera = $Camera
+@onready var hand_position = $HandPosition
 
 # Rotation variables
 var rotation_x = 0.0
 var rotation_y = 0.0
+
+#func _enter_tree():
+#	set_multiplayer_authority(str(name).to_int())
 
 func _ready():
 	# Capture the mouse
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _input(event):
+#	if not is_multiplayer_authority(): return
 	if event is InputEventMouseMotion:
 		# Update rotation based on mouse motion
 		rotation_y -= event.relative.x * mouse_sensitivity
@@ -48,7 +57,12 @@ func _input(event):
 		else:
 			try_pick_up_ball()
 
+	if event.is_action_pressed("throw"):
+		if holding_ball:
+			throw_ball()
+
 func _physics_process(delta):
+#	if not is_multiplayer_authority():return
 	# Add the gravity
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -80,7 +94,6 @@ func _physics_process(delta):
 
 	move_and_slide()
 
-
 func try_pick_up_ball():
 	# Cast a ray from the camera to detect the ball
 	var params = PhysicsRayQueryParameters3D.new()
@@ -104,6 +117,13 @@ func drop_ball():
 func is_holding_ball():
 	return holding_ball
 
+func throw_ball():
+	if ball:
+		var throw_direction = camera.global_transform.basis.z.normalized() * -THROW_FORCE
+		ball.apply_central_impulse(throw_direction)
+		drop_ball()
+
 func get_hand_position():
 	# Return the position where the ball should be when held
-	return camera.global_transform.origin + camera.global_transform.basis.z.normalized() * 1.5
+	return hand_position.global_transform.origin
+	#camera.global_transform.origin + camera.global_transform.basis.z.normalized() * 1.5
